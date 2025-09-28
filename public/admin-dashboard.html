@@ -1,0 +1,19 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Dashboard</title></head><body>
+  <h1>Dashboard - Bugs Buster (demo)</h1>
+  <button id="logout">Cerrar sesión</button>
+  <h2>Reservas</h2><div id="reservations">Cargando...</div>
+  <h2>Reporte por servicio</h2><div id="report">Cargando...</div>
+<script>
+async function load(){
+  const r = await fetch('/admin/reservations');
+  if(r.status===401){ window.location.href='/admin-login.html'; return; }
+  const j = await r.json();
+  const list = j.rows.map(x=>`<div><b>${x.name}</b> ${x.service} — ${x.date}</div>`).join('');
+  document.getElementById('reservations').innerHTML = list || 'Sin reservas';
+  const rep = await fetch('/admin/reports/services');
+  const pr = await rep.json();
+  document.getElementById('report').innerHTML = pr.rows.map(x=>`<div>${x.service}: ${x.cnt}</div>`).join('') || 'Sin datos';
+}
+document.getElementById('logout').addEventListener('click', async ()=>{ await fetch('/admin/logout',{method:'POST'}); window.location.href='/'; });
+load();
+</script></body></html>

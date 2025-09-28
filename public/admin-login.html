@@ -1,0 +1,19 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Admin Login</title></head><body>
+  <h1>Admin - Bugs Buster</h1>
+  <form id="login">
+    <input name="username" placeholder="Usuario" required/><br/>
+    <input name="password" type="password" placeholder="Contraseña" required/><br/>
+    <button>Entrar</button>
+  </form>
+  <div id="err"></div>
+<script>
+document.getElementById('login').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const data = Object.fromEntries(fd.entries());
+  const res = await fetch('/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) });
+  const j = await res.json();
+  if(j.ok) window.location.href = '/admin-dashboard.html';
+  else document.getElementById('err').innerText = j.error || 'Error';
+});
+</script></body></html>

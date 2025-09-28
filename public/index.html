@@ -1,0 +1,22 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Bugs Buster</title></head><body>
+  <h1>Reserva - Bugs Buster</h1>
+  <form id="form">
+    <input name="name" placeholder="Nombre" required/><br/>
+    <input name="email" type="email" placeholder="Email" required/><br/>
+    <select name="service"><option>Fumigación</option><option>Exterminio</option><option>Inspección</option></select><br/>
+    <input name="date" type="date" required/><br/>
+    <button type="submit">Reservar</button>
+  </form>
+  <div id="msg"></div>
+  <p><a href="/admin-login.html">Acceder al panel (demo)</a></p>
+<script>
+document.getElementById('form').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const data = Object.fromEntries(fd.entries());
+  const res = await fetch('/reserve', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) });
+  const j = await res.json();
+  document.getElementById('msg').innerText = j.ok ? 'Reserva recibida. Gracias!' : ('Error: '+(j.error||''));
+  e.target.reset();
+});
+</script></body></html>
